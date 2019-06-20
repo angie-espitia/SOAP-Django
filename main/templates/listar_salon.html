@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} Registro Clase {% endblock %}
+
+{%  block content %}
+    		<!-- <a href="{% url 'guardar_do' %}">crear nuevo</a> -->
+			{% csrf_token %}
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+
+			  <div class="col-sm-2 col-lg-2 col-md-2">
+			    <div class="sidebar-nav">
+			      <div class="navbar navbar-default" role="navigation">
+			        <div class="navbar-header">
+			          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+			            <span class="sr-only">Toggle navigation</span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			          </button>
+			          <span class="visible-xs navbar-brand">Sidebar menu</span>
+			        </div>
+			        <div class="navbar-collapse collapse sidebar-navbar-collapse" style="padding: 0px;">
+			          <ul class="nav navbar-nav">
+
+			            <li class="font-17" onclick="mostrarGua()"> <a href="#">Nuevo</a> </li>
+			            <br>
+			            <li class="font-17" onclick="mostrarAct()"> <a href="#">Actualizar</a> </li>
+			            <br>
+			            <li class="font-17" onclick="mostrarEli()"> <a href="#">Eliminar</a> </li>
+
+			          </ul>
+			        </div><!--/.nav-collapse -->
+			      </div>
+			    </div>
+			  </div>
+			  <div class="col-sm-10 col-lg-10 col-md-10"> 
+
+	    	<div class="col-lg-12 col-md-12"><br></div>
+
+			<div id="guardar" style="display: none" class="col-lg-12 col-md-12">
+				<h2>Guardar:</h2>				
+	    		<div class="col-lg-5 col-md-5 col-sm-5">
+		    		<label for="detalle">detalle</label>
+		    		<input class="form-control" type="text" id="detalle">
+	    		</div>
+	    		<div class="col-lg-4 col-md-4 col-sm-4 text-right">
+	    			<br>
+	    			<button class="btn btn-primary font-17" onclick="Guardar()">Guardar</button>
+	    		</div>
+	    		<div class="col-lg-12 col-md-12"><hr></div>
+			</div>
+
+			<div id="actualizar" style="display: none" class="col-lg-12 col-md-12">
+				<h2>Actualizar:</h2>
+				<div class="col-lg-5 col-md-5 col-sm-5">
+		    		<label for="id">id</label>
+		    		<input class="form-control" type="number" id="id" oninput="datos();">
+	    		</div>
+	    		<div class="col-lg-5 col-md-5 col-sm-5">
+		    		<label for="detalle2">detalle2</label>
+		    		<input class="form-control" type="text" id="detalle2">
+	    		</div>
+	    		<div class="col-lg-10 col-md-10 col-sm-10 text-right">
+	    			<br>
+	    			<button class="btn btn-primary font-17" onclick="Actualizar()">Actualizar</button>
+	    		</div>
+	    		<div class="col-lg-12 col-md-12"><hr></div>
+			</div>
+
+			<div id="eliminar" style="display: none" class="col-lg-12 col-md-12">
+				<h2>Eliminar:</h2>
+				<div class="col-lg-5 col-md-5 col-sm-5">
+					<label for="id2">id</label>
+					<input class="form-control" type="number" id="id2">
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 text-right">
+	    			<br>
+	    			<button class="btn btn-danger font-17" onclick="Eliminar()">Eliminar</button>
+	    		</div>
+	    		<div class="col-lg-12 col-md-12"><hr></div>
+			</div>
+	
+			<div class="col-lg-12 col-md-12">
+				<h1>Salones:</h1>
+				<table class="table table-bordered table-striped">
+					<thead style="background-color: #31708f;color: white;">						
+						<tr>
+							<th>Detalle</th>
+							<th>Id</th>
+						</tr>
+					</thead>
+					<tbody id="div">
+
+					</tbody>
+  				</table>
+			</div>
+
+
+			</div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+		<script>
+			$.ajax({
+				headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				method: "GET",
+				url: "/salones/movimiento/list/",
+				dataType: 'json',
+				data: {  }
+			})
+
+			.done(function(response){
+				var res = response;
+				var html = '<br>';
+
+				for(var item in res){
+					
+					for(var i = 0; i < res[item].length; i++){
+						console.log(res[item][i])	
+						console.log(res[item][i].__values__);	
+						html +='<tr> ' ;					
+						html +='<td> ' + res[item][i].__values__.detalle + ' </td>';
+						html +='<td> '+  res[item][i].__values__.id + ' </td>';
+						html +='</tr> ';
+					}
+					
+				}	
+				
+				$("#div").html(html)
+			});
+
+			var booleanMostrarGuardar = 0;
+			function mostrarGua() {
+				
+				if(booleanMostrarGuardar == 0){
+					$('#guardar').show();
+					$('#actualizar').hide();
+					$('#eliminar').hide();
+					booleanMostrarGuardar = 1;
+					booleanMostrarActualizar = 0;
+					booleanMostrarEliminar = 0;
+				} else {
+					$('#guardar').hide();
+					booleanMostrarGuardar = 0;
+				}
+			}
+
+			function Guardar() {
+				var detalle = $("#detalle").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/salones/movmiento/save/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken ,
+							"detalle": detalle }
+				})
+
+				.done(function(response){
+					location.reload();
+				});
+
+			}
+
+			function datos() {
+
+				var id = $("#id").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/salones/movmiento/act/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id }
+				})
+
+				.done(function(response){
+					var res = response;
+					var html = '<br>';
+
+					for(var item in res){
+						
+						for(var i = 0; i < res[item].length; i++){
+						
+							$('#detalle2').val(res[item][i].__values__.detalle);
+						}
+						
+					}	
+					
+				});
+			}
+
+			var booleanMostrarActualizar = 0;
+			function mostrarAct() {
+				
+				if(booleanMostrarActualizar == 0){
+					$('#actualizar').show();
+					$('#guardar').hide();
+					$('#eliminar').hide();
+					booleanMostrarActualizar = 1;
+					booleanMostrarGuardar = 0;
+					booleanMostrarEliminar = 0;
+				} else {
+					$('#actualizar').hide();
+					booleanMostrarActualizar = 0;
+				}
+			}
+
+			function Actualizar() {
+
+				var id = $("#id").val();
+				var detalle = $("#detalle2").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/salones/movmiento/act_guar/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id,
+							"detalle": detalle }
+				})
+
+				.done(function(response){
+					var res = response;
+					
+					location.reload();			
+					
+				});
+			}
+
+			var booleanMostrarEliminar = 0;
+			function mostrarEli() {
+				
+				if(booleanMostrarEliminar == 0){
+					$('#eliminar').show();
+					$('#actualizar').hide();
+					$('#guardar').hide();
+					booleanMostrarEliminar = 1;
+					booleanMostrarGuardar = 0;
+					booleanMostrarActualizar = 0;
+				} else {
+					$('#eliminar').hide();
+					booleanMostrarEliminar = 0;
+				}
+			}
+
+			function Eliminar() {
+
+				var id = $("#id2").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/salones/movmiento/remove/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id }
+				})
+
+				.done(function(response){
+					var res = response;
+					
+					location.reload();			
+					
+				});
+			}
+		</script>
+{% endblock %}

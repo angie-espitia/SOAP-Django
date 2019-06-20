@@ -1,0 +1,577 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %} Registro Clase {% endblock %}
+
+{%  block content %}
+	<!-- <a href="{% url 'guardar_do' %}">crear nuevo</a> -->
+	{% csrf_token %}
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+
+			  <div class="col-sm-2 col-lg-2 col-md-2">
+			    <div class="sidebar-nav">
+			      <div class="navbar navbar-default" role="navigation">
+			        <div class="navbar-header">
+			          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-navbar-collapse">
+			            <span class="sr-only">Toggle navigation</span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			            <span class="icon-bar"></span>
+			          </button>
+			          <span class="visible-xs navbar-brand">Sidebar menu</span>
+			        </div>
+			        <div class="navbar-collapse collapse sidebar-navbar-collapse" style="padding: 0px;">
+			          <ul class="nav navbar-nav">
+
+			            <li class="font-17" onclick="mostrarGua();list()"> <a href="#">Listar</a> </li>
+			            <br>
+			            <li class="font-17" onclick="mostrarAct()"> <a href="#">Actualizar</a> </li>
+			            <br>
+			            <li class="font-17" onclick="mostrarEli()"> <a href="#">Eliminar</a> </li>
+
+			          </ul>
+			        </div><!--/.nav-collapse -->
+			      </div>
+			    </div>
+			  </div>
+			  <div class="col-sm-10 col-lg-10 col-md-10">    
+				
+				<div class="col-lg-12 col-md-12"><br></div>
+
+				<div id="actualizar" style="display: none" class="col-lg-12 col-md-12">
+					<h2>Actualizar:</h2>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="id">id</label>
+			    		<input class="form-control" type="number" id="id" oninput="datos();">
+		    		</div>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="docentes2">Docente</label>
+						<select class="form-control" id="docentes2">
+						</select>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="salones2">Salón</label>
+						<select class="form-control" id="salones2">
+						</select>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="fecha2">fecha</label>
+			    		<input class="form-control" type="date" id="fecha2">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="hora_inicio2">hora inicio</label>
+			    		<input class="form-control" type="time" id="hora_inicio2" oninput="mostrarHoraFinal2()">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="hora_fin2">hora final</label>
+			    		<input class="form-control" type="time" id="hora_fin2" disabled="">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+			    		<label for="objetivo2">objetivo</label>
+			    		<input class="form-control" type="text" id="objetivo2">
+		    		</div>
+		    		<div class="col-lg-10 col-md-10 col-sm-10 text-right">
+		    			<br>
+		    			<button class="btn btn-primary font-17" onclick="Actualizar()">Actualizar</button>
+		    		</div>
+
+		    		<div class="col-lg-12 col-md-12"><hr></div>
+				</div>
+
+				
+
+				<div id="eliminar"  style="display: none" class="col-lg-12 col-md-12">
+					<h2>Eliminar: </h2>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="id2">id</label>
+						<input class="form-control" type="number" id="id2">
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5 text-right">
+		    			<br>
+		    			<button class="btn btn-danger font-17" onclick="Eliminar()">Eliminar</button>
+		    		</div>
+
+		    		<div class="col-lg-12 col-md-12"><hr></div>
+				</div>
+				
+				<div id="guardar" class="col-lg-12 col-md-12" style="display: none">
+					<h1>Registros:</h1>
+					<div class="col-md-12 col-lg-12 col-sm-12" style="padding: 0px">
+						<div class="col-lg-3 col-md-3 col-sm-3" style="padding: 0px">
+							<p>Filtrar una busqueda por fecha</p>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3" >
+			    			<input class="form-control" type="date" id="fecha3" onchange="filtrar_fecha();">
+		    			</div>
+
+		    			<div class="col-lg-3 col-md-3 col-sm-3" style="padding: 0px">
+							<p>Filtrar una busqueda por docente</p>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-3" >
+			    			<input class="form-control" type="text" id="nombre_docente" oninput="filtrar_docente();">
+		    			</div>
+
+					 
+					 <div class="col-md-12 col-lg-12 col-sm-12" style="padding: 0px"><br></div>
+					 
+					<table class="table table-bordered table-striped">
+						<thead style="background-color: #31708f;color: white;">						
+							<tr>
+								<th>Id</th>
+								<th>Docente_id</th>
+								<th>Salon_id</th>
+								<th>Fecha</th>
+								<th>Hora Inicio</th>
+								<th>Hora Fin</th>
+								<th>Objetivo</th>
+							</tr>
+						</thead>
+						<tbody id="div">
+
+						</tbody>
+	  				</table>
+				</div>
+
+				<div class="col-lg-12 col-md-12"><hr></div>
+			  </div>
+
+			  <div class="col-lg-12 col-md-12">
+			  	<h1>Nuevo Registro de Clase:</h1>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="fecha">Docente</label>
+						<select class="form-control" id="docentes">
+						</select>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="fecha">Salón</label>
+						<select class="form-control" id="salones">
+						</select>
+					</div>
+					<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="fecha">fecha</label>
+			    		<input class="form-control" type="date" id="fecha">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="hora_inicio">hora inicio</label>
+			    		<input class="form-control" type="time" id="hora_inicio" oninput="mostrarHoraFinal()">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+						<label for="hora_fin">hora final</label>
+			    		<input class="form-control" type="time" id="hora_fin" disabled="">
+		    		</div>
+		    		<div class="col-lg-5 col-md-5 col-sm-5">
+			    		<label for="objetivo">objetivo</label>
+			    		<input class="form-control" type="text" id="objetivo">
+		    		</div>
+		    		<div class="col-lg-10 col-md-10 col-sm-10 text-right">
+		    			<br>
+		    			<button class="btn btn-primary font-17" onclick="Guardar()">Guardar</button>
+		    		</div>
+				</div>
+
+
+			</div>
+	      </div>
+	    </div>
+	</div>
+
+{% endblock %}
+
+{% block javascript %}
+		<script type="text/javascript">
+			$.ajax({
+				headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				method: "GET",
+				url: "/registros/movmiento/docente/",
+				dataType: 'json',
+				data: {  }
+			})
+
+			.done(function(response){
+				var res = response;
+				var html = '<br>';
+
+				for(var item in res){
+					
+					for(var i = 0; i < res[item].length; i++){
+					
+						html +='';
+						html += '<option value='+res[item][i].__values__.id+'>'+res[item][i].__values__.cedula+'</option>';
+					}
+					
+				}	
+				
+				$("#docentes").html(html)
+				$("#docentes2").html(html)
+			});
+
+			$.ajax({
+				headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+				method: "GET",
+				url: "/registros/movmiento/salon/",
+				dataType: 'json',
+				data: {  }
+			})
+
+			.done(function(response){
+				var res = response;
+				var html = '<br>';
+
+				for(var item in res){
+					
+					for(var i = 0; i < res[item].length; i++){
+					
+						html +='';
+						html += '<option value='+res[item][i].__values__.id+'>'+res[item][i].__values__.detalle+'</option>';
+					}
+					
+				}	
+				
+				$("#salones").html(html)
+				$("#salones2").html(html)
+			});
+
+
+
+
+			// 
+			
+			
+			var booleanMostrarGuardar = 0;
+			function mostrarGua() {
+				
+				if(booleanMostrarGuardar == 0){
+					$('#guardar').show();
+					$('#actualizar').hide();
+					$('#eliminar').hide();
+					booleanMostrarGuardar = 1;
+					booleanMostrarActualizar = 0;
+					booleanMostrarEliminar = 0;
+				} else {
+					$('#guardar').hide();
+					booleanMostrarGuardar = 0;
+				}
+			}
+
+			function mostrarHoraFinal(){
+
+				var hora_inicio = $("#hora_inicio").val();
+
+				var validarHora = parseInt(hora_inicio.substr(0,4));
+
+				suma = parseInt(validarHora)+2;
+
+				if (validarHora < 8) {
+					$('#hora_fin').val("0"+(suma)+':'+"00");
+				} else if (validarHora > 8) {
+					$('#hora_fin').val(suma+':'+"00");
+				}
+
+				
+			}
+
+			function mostrarHoraFinal2(){
+
+				var hora_inicio = $("#hora_inicio2").val();
+
+				var validarHora = parseInt(hora_inicio.substr(0,4));
+
+				suma = parseInt(validarHora)+2;
+
+				if (validarHora < 8) {
+					$('#hora_fin2').val("0"+(suma)+':'+"00");
+				} else if (validarHora > 8) {
+					$('#hora_fin2').val(suma+':'+"00");
+				}
+
+				
+			}
+
+			function list() {
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "GET",
+					url: "/registros/movimiento/list/",
+					dataType: 'json',
+					data: {  }
+				})
+
+				.done(function(response){
+					var res = response;
+					var html ='' ;
+					var html = '<br>';
+
+					for(var item in res){
+						
+						for(var i = 0; i < res[item].length; i++){
+
+							var año = res[item][i].__values__.fecha.substr(0,10);
+
+							html +='<tr> ' ;
+							html +='<td> ' + res[item][i].__values__.id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.docente_id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.salon_id + ' </td>';
+							html +='<td> '+  año + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_inicio + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_fin + ' </td>';
+							html +='<td> '+  res[item][i].__values__.objetivo + '</td>';
+							html +='</tr>';
+						}
+						
+					}	
+					
+
+					$("#div").show()
+					$("#div").html(html)
+				});
+
+			}
+
+			function filtrar_fecha() {
+
+				var fecha = $("#fecha3").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/filtrar/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							 "fecha": fecha
+							 }
+				})
+
+				.done(function(response){
+					var res = response;
+					console.log(response);
+					var html ='' ;
+					var html = '<br>';
+					for(var item in res){
+						
+						for(var i = 0; i < res[item].length; i++){
+
+							var año = res[item][i].__values__.fecha.substr(0,10);
+
+							html +='<tr> ' ;
+							html +='<td> ' + res[item][i].__values__.id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.docente_id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.salon_id + ' </td>';
+							html +='<td> '+  año + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_inicio + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_fin + ' </td>';
+							html +='<td> '+  res[item][i].__values__.objetivo + '</td>';
+							html +='</tr>';
+						}
+						
+					}	
+					
+
+					$("#div").show()
+					$("#div").html(html)
+				});
+
+			}
+
+			function filtrar_docente() {
+
+				var nombre = $("#nombre_docente").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/filtrar2/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							 "nombre": nombre
+							 }
+				})
+
+				.done(function(response){
+					var res = response;
+					console.log(response);
+					var html ='' ;
+					var html = '<br>';
+					for(var item in res){
+						
+						for(var i = 0; i < res[item].length; i++){
+
+							var año = res[item][i].__values__.fecha.substr(0,10);
+
+							html +='<tr> ' ;
+							html +='<td> ' + res[item][i].__values__.id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.docente_id + ' </td>';
+							html +='<td> '+ res[item][i].__values__.salon_id + ' </td>';
+							html +='<td> '+  año + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_inicio + ' </td>';
+							html +='<td> '+  res[item][i].__values__.hora_fin + ' </td>';
+							html +='<td> '+  res[item][i].__values__.objetivo + '</td>';
+							html +='</tr>';
+						}
+						
+					}	
+					
+
+					$("#div").show()
+					$("#div").html(html)
+				});
+
+			}
+
+			function Guardar() {
+				var docente_id = $("#docentes").val();
+				var salon_id = $("#salones").val();
+				var fecha = $("#fecha").val();
+				var hora_inicio = $("#hora_inicio").val();
+				var hora_fin = $("#hora_fin").val();
+				var objetivo = $("#objetivo").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/save/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken ,
+							"docente_id": docente_id,
+							"salon_id": salon_id,
+							"fecha": fecha,
+							"hora_inicio": hora_inicio,
+							"hora_fin": hora_fin,
+							"objetivo": objetivo }
+				})
+
+				.done(function(response){
+					// console.info(response);
+					location.reload();
+				});
+
+			}
+
+			function datos() {
+
+				var id = $("#id").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/act/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id }
+				})
+
+				.done(function(response){
+					var res = response;
+					var html = '<br>';
+
+					for(var item in res){
+						
+						for(var i = 0; i < res[item].length; i++){
+						
+							$("#docentes2").val(res[item][i].__values__.docente_id);
+							$("#salones2").val(res[item][i].__values__.salon_id);
+							$("#fecha2").val(res[item][i].__values__.fecha.substr(0,10));
+							$("#hora_inicio2").val(res[item][i].__values__.hora_inicio);
+							$("#hora_fin2").val(res[item][i].__values__.hora_fin);
+							$("#objetivo2").val(res[item][i].__values__.objetivo);
+						}
+						
+					}	
+					
+				});
+			}
+
+			var booleanMostrarActualizar = 0;
+			function mostrarAct() {
+				
+				if(booleanMostrarActualizar == 0){
+					$('#actualizar').show();
+					$('#guardar').hide();
+					$('#eliminar').hide();
+					booleanMostrarActualizar = 1;
+					booleanMostrarGuardar = 0;
+					booleanMostrarEliminar = 0;
+				} else {
+					$('#actualizar').hide();
+					booleanMostrarActualizar = 0;
+				}
+			}
+
+			function Actualizar() {
+
+				var id = $("#id").val();
+				var docente_id = $("#docentes2").val();
+				var salon_id = $("#salones2").val();
+				var fecha = $("#fecha2").val();
+				var hora_inicio = $("#hora_inicio2").val();
+				var hora_fin = $("#hora_fin2").val();
+				var objetivo = $("#objetivo2").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/act_guar/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id,
+							"docente_id": docente_id,
+							"salon_id": salon_id,
+							"fecha": fecha,
+							"hora_inicio": hora_inicio,
+							"hora_fin": hora_fin,
+							"objetivo": objetivo }
+				})
+
+				.done(function(response){
+					var res = response;
+					
+					location.reload();			
+					
+				});
+			}
+
+			var booleanMostrarEliminar = 0;
+			function mostrarEli() {
+				
+				if(booleanMostrarEliminar == 0){
+					$('#eliminar').show();
+					$('#actualizar').hide();
+					$('#guardar').hide();
+					booleanMostrarEliminar = 1;
+					booleanMostrarGuardar = 0;
+					booleanMostrarActualizar = 0;
+				} else {
+					$('#eliminar').hide();
+					booleanMostrarEliminar = 0;
+				}
+			}
+
+			function Eliminar() {
+
+				var id = $("#id2").val();
+				var csrftoken = $('[name="csrfmiddlewaretoken"]').val();
+
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					method: "POST",
+					url: "/registros/movmiento/remove/",
+					dataType: 'json',
+					data: { "csrfmiddlewaretoken": csrftoken,
+							"id": id }
+				})
+
+				.done(function(response){
+					var res = response;
+					
+					location.reload();			
+					
+				});
+			}
+		</script>
+{% endblock %}

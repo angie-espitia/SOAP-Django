@@ -1,0 +1,80 @@
+.navbar-brand {
+  padding: 15px;
+}
+.navbar-brand>img {
+  height: 100%;
+  padding: 15px;
+  width: auto;
+}
+
+.navbar-inverse {
+    background-color: #31708f;
+    border-color: #286090;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.navbar-inverse .navbar-brand:focus, .navbar-inverse .navbar-brand:hover {
+    color: #f5f4f4;
+    background-color: transparent;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: #467f9a;
+}
+
+.navbar-inverse .navbar-toggle:focus, .navbar-inverse .navbar-toggle:hover {
+    background-color: #1d485e;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: #31708f;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #ffffff;
+    font-size: 18px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #ffffff;
+    font-size: 18px;
+    background-color: #24566f;
+}
+
+.font-17{
+	font-size: 17px;
+}
+
+.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
+    background-color: #e2e2e2;
+  width: 100%;
+}
+
+/* make sidebar nav vertical */ 
+@media (min-width: 768px) {
+  .sidebar-nav .navbar .navbar-collapse {
+    padding: 0;
+    max-height: none;
+  }
+  .sidebar-nav .navbar ul {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li {
+    float: none;
+    display: block;
+  }
+  .sidebar-nav .navbar li a {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .sidebar-nav .navbar li a:hover {
+    background-color: #e2e2e2;
+  width: 100%;
+  }
+}
